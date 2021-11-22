@@ -20,76 +20,62 @@ Challenge for the "Data Visualization" module of FreeCodeCamp
 
 ## JSON Data:
 
+Here are the datasets you will need to complete this project:
+
 **US Education**
 
-Data:https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json
+https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json
 
 ```json
 [
-	{
-		"fips": 1001,
-		"state": "AL",
-		"area_name": "Autauga County",
-		"bachelorsOrHigher": 21.9
-	},
-	{
-		"fips": 1003,
-		"state": "AL",
-		"area_name": "Baldwin County",
-		"bachelorsOrHigher": 28.6
-	},
-	{
-		"fips": 1005,
-		"state": "AL",
-		"area_name": "Barbour County",
-		"bachelorsOrHigher": 13.6
-	},
   {
-		"fips": "... continue ..."
+    "fips": 1001,
+    "state": "AL",
+    "area_name": "Autauga County",
+    "bachelorsOrHigher": 21.9
   },
+  {
+    "fips": 1003,
+    "state": "AL",
+    "area_name": "Baldwin County",
+    "bachelorsOrHigher": 28.6
+  },
+  {
+    "fips": 1005,
+    "state": "AL",
+    "area_name": "Barbour County",
+    "bachelorsOrHigher": 13.6
+  },
+  {
+    "fips": "... continue ..."
+  }
 ]
 ```
 
 **US County**
 
-Data:https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json
+https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json
 
 ```json
 {
-	"type": "Topology",
-	"objects": {
-		"counties": {
-			"type": "GeometryCollection",
-			"geometries": [
-				{
-					"type": "Polygon",
-					"id": 5089,
-					"arcs": [
-						[
-							0,
-							1,
-							2,
-							3,
-							4
-						]
-					]
-				},
-				{
-					"type": "Polygon",
-					"id": 6079,
-					"arcs": [
-						[
-							5,
-							6,
-							7,
-							8,
-							9
-						]
-					]
-				},
-				{
-					"type": "Polygon",
-					"id": "... continue ...",
+  "type": "Topology",
+  "objects": {
+    "counties": {
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "Polygon",
+          "id": 5089,
+          "arcs": [[0, 1, 2, 3, 4]]
+        },
+        {
+          "type": "Polygon",
+          "id": 6079,
+          "arcs": [[5, 6, 7, 8, 9]]
+        },
+        {
+          "type": "Polygon",
+          "id": "... continue ..."
         }
       ]
     }

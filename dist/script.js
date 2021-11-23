@@ -1,7 +1,7 @@
 /** Size */
 
 const margin = {
-  top: 0,
+  top: 110,
   right: 20,
   bottom: 20,
   left: 0,
@@ -72,13 +72,43 @@ const processData = (us, education) => {
     //.attr("viewBox", `0 0 ${parentWidth} ${parentHeight}`);
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
-      
+
+  // Headers
+
+  const title = map
+    .append("text")
+    .attr("id", "title")
+    .attr("class", "title")
+    .attr("x", bbox.width / 2)
+    .attr("y", -margin.top / 2 - 5)
+    .text("US Education by County (2010-2014)");
+
+  const subtitle = map
+    .append("text")
+    .attr("id", "description")
+    .attr("class", "subtitle")
+    .attr("x", bbox.width / 2)
+    .attr("y", -margin.top / 2 + 30)
+    .text("% of 25-year-old citizens (or older) with a bachelor's degree (or higher)");
+  
+    // Tooltip
+
+  const tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("id", "tooltip")
+    .attr("class", "tooltip")
+  ;  
+  
   // Set counties
   
+  const getEducationByCounty = (countyId) => {
+    return education.filter((item) => (item.fips === countyId))[0]
+  };
+  
   const getCountyBachelors = (countyId) => {
-    const result = education.filter((item) => (item.fips === countyId));
-    return result[0].bachelorsOrHigher;
-  }
+    return getEducationByCounty(countyId).bachelorsOrHigher
+  };
   
   map
     .append("g")
@@ -92,8 +122,33 @@ const processData = (us, education) => {
     .attr('data-education', d => getCountyBachelors(d.id))
     .attr("fill", d => colorScale(getCountyBachelors(d.id)))
     .attr("d", d3.geoPath())
-    .on('mouseover', (event, d) => {})
-    .on("mouseout", (event, d) => {});
+    .on("mouseover", (event, d) => {
+
+      console.log(d);
+    
+      const [xTooltipMargin, yTooltipMargin] = [20, -40];
+    
+      const tooltipInnerHtml = (item) => (
+        ` <hr class="tt-color" 
+             style="border-color: ${colorScale(item.bachelorsOrHigher)}"/>
+             <span class="tt-county">${item.area_name}</span>, 
+         <span class="tt-state">${item.state}</span>.
+         <br />
+         <span class="tt-bachelor">${item.bachelorsOrHigher}%</span>`
+      );
+    
+      tooltip
+        .transition().duration(300).style("opacity", 0.9);
+      
+      tooltip
+        .style("top", (event.pageY || event.y) + yTooltipMargin + "px")
+        .style("left", (event.pageX || event.x) + xTooltipMargin + "px")
+        .attr("data-education", getCountyBachelors(d.id))
+        .html(tooltipInnerHtml(getEducationByCounty(d.id)));
+    })
+    .on("mouseout", () => {
+      tooltip.transition().duration(300).style("opacity", 0);
+  });
 
   // Set states
   

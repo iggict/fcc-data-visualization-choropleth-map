@@ -30,6 +30,18 @@ body {
   width: 100vw;
 }
 
+.title {
+  color: #1d1e22;
+  font-size: 32px;
+  text-anchor: middle;
+}
+
+.subtitle {
+  color: #1d1e22;
+  font-size: 22px;
+  text-anchor: middle;
+}
+
 .map {
   /*width: 960px;
   height: 610px;*/
@@ -48,4 +60,27 @@ body {
   stroke: white;
   stroke-linejoin: round;
   fill: none;
+}
+
+.tooltip {
+  position: absolute;
+  padding: 10px;
+  background: white;
+  border-radius: 5px;
+  color: black;
+  text-align: center;
+  opacity: 0;
+  border: solid 1px grey;
+  /* It does not work correctly without this p-e property */
+  pointer-events: none;
+}
+
+.tt-color {
+  border-style: solid;
+  border-width: 4px;
+  border-radius: 2px;
+}
+
+.tt-bachelor{
+  font-weight: bold;
 }

@@ -43,17 +43,8 @@ body {
 }
 
 .map {
-  /*width: 960px;
-  height: 610px;*/
-  border: solid 1px black;
-  border-radius: 3px; 
-}
-
-.county {
-  
-}
-
-.county:hover {
+  /* border: solid 1px black;
+  border-radius: 3px; */
 }
 
 .states {  

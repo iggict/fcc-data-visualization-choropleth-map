@@ -3,14 +3,9 @@
 const margin = {
   top: 110,
   right: 20,
-  bottom: 20,
-  left: 0,
+  bottom: 80,
+  left: 10,
 };
-
-// Note: The width and height of the map are taken from the bbox property of counties.json 
-
-const parentWidth = (w) => w + margin.left + margin.right;
-const parentHeight = (h) => h + margin.top + margin.bottom;
 
 /** Load data */
 
@@ -29,8 +24,6 @@ Promise.all([d3.json(COUNTY_JSON),d3.json(EDUCATION_JSON)])
 /** Process data */
 
 const processData = (us, education) => {
-  // console.log(us);
-  // console.log(education);
   
   /**  Parse data */
   
@@ -40,6 +33,10 @@ const processData = (us, education) => {
     width: us.bbox[2],
     height: us.bbox[3]
   };
+  
+  const [width, height] = [bbox.width, bbox.height];
+  const parentWidth = width + margin.left + margin.right;
+  const parentHeight = height + margin.top + margin.bottom;
   
   const [minBach, maxBach] = d3.extent(education, (d) => d.bachelorsOrHigher);
 
@@ -66,8 +63,8 @@ const processData = (us, education) => {
     .append("svg")
     .attr("id", "map")
     .attr("class", "map")
-    .attr("width", parentWidth(bbox.width))
-    .attr("height", parentHeight(bbox.height))
+    .attr("width", parentWidth)
+    .attr("height", parentHeight)
     //.attr("preserveAspectRatio", "xMinYMin meet")
     //.attr("viewBox", `0 0 ${parentWidth} ${parentHeight}`);
     .append("g")
@@ -79,7 +76,7 @@ const processData = (us, education) => {
     .append("text")
     .attr("id", "title")
     .attr("class", "title")
-    .attr("x", bbox.width / 2)
+    .attr("x", width / 2)
     .attr("y", -margin.top / 2 - 5)
     .text("US Education by County (2010-2014)");
 
@@ -87,11 +84,11 @@ const processData = (us, education) => {
     .append("text")
     .attr("id", "description")
     .attr("class", "subtitle")
-    .attr("x", bbox.width / 2)
+    .attr("x", width / 2)
     .attr("y", -margin.top / 2 + 30)
     .text("% of 25-year-old citizens (or older) with a bachelor's degree (or higher)");
   
-    // Tooltip
+  // Tooltip
 
   const tooltip = d3
     .select("body")
@@ -124,8 +121,6 @@ const processData = (us, education) => {
     .attr("d", d3.geoPath())
     .on("mouseover", (event, d) => {
 
-      console.log(d);
-    
       const [xTooltipMargin, yTooltipMargin] = [20, -40];
     
       const tooltipInnerHtml = (item) => (
@@ -157,6 +152,68 @@ const processData = (us, education) => {
     .attr('class', 'states')
     .datum(countyInnerBoundaries)
     .attr('d', d3.geoPath());  
+  
+  /** Draw legend */
+      
+  const legendItemWidth = 30;
+  const legendWidth = colorRange.length * legendItemWidth;
+
+  // Legend
+
+  const legendTop = parentHeight - margin.top - legendItemWidth * 2;
+  const legendLeft = parentWidth / 2 - legendItemWidth * numOfColors /2;
+
+  const legend = map
+  .append("g")
+  .attr("id", "legend")
+  .attr("class", "legend")
+  .append("g")
+  .attr("transform",`translate(${legendLeft},${legendTop})`); 
+
+  legend
+    .selectAll("rect")
+    .data(colorRange)
+    .enter()
+    .append("rect")
+    .classed("legend-item", true)
+    .style("fill", d => d)
+    .attr("x", (d, i) => (legendItemWidth * i))
+    .attr("y", 0)
+    .attr("width", legendItemWidth)
+    .attr("height", legendItemWidth);
+
+  // Legend scale
+
+  const legendXScale = d3
+  .scaleLinear()
+  .domain([minBach, maxBach])
+  .range([0, legendWidth]);
+
+  // Legend axis
+
+  const createDomain = (min, max, length) => {
+    const base = min;
+    const step = (max - min) / length;
+    const array = [base];
+    for (let i = 0; i <= length; i++) {
+      array.push (base + i * step);
+    }
+    return array;
+  };
+
+  const legendXDomain = createDomain(minBach, maxBach, colorRange.length);
+
+  const legendXAxis = map
+  .append("g")
+  .attr("id", "legend-x-axis")
+  .attr("class", "axis legend-x-axis")
+  .attr("transform", `translate(${legendLeft}, ${legendTop + legendItemWidth})`);
+
+  legendXAxis.call(d3
+    .axisBottom(legendXScale)
+    .tickValues(legendXDomain)
+    .tickFormat(d3.format('.1f'))
+  );
 
 }
 

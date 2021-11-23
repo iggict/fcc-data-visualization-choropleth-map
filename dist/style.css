@@ -43,3 +43,9 @@ body {
 
 .county:hover {
 }
+
+.states {  
+  stroke: white;
+  stroke-linejoin: round;
+  fill: none;
+}
